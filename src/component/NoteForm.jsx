@@ -1,16 +1,27 @@
 import React from 'react'
 
-import {useState} from 'react'
+import {useState,useEffect} from 'react'
 import Card from './Card'
 import Button from './Button'
 import RatingSelect from './RatingSelect'
-
-function NoteForm({handelAdd}) {
+import { useContext } from 'react'
+import FeedbackContext from '../context/feedbackContext'
+function NoteForm({}) {
 
     const [text,setText]=useState('');
     const [btnDisable,setBtnDisabled]=useState(true);
     const [message,setMessage]=useState('');
     const [rating,setRating]=useState(10);
+    const {addNewFeedback,feedbackEdit,updateFeedback}=useContext(FeedbackContext);
+    
+    useEffect(()=>{
+        if(feedbackEdit.edit==true){
+            setBtnDisabled(false)
+            setText(feedbackEdit.item.text)
+            setRating(feedbackEdit.item.rating)
+        }
+    
+    },[feedbackEdit])
     const HandelText=(e)=>{
          let newText = e.target.value;
        
@@ -34,7 +45,12 @@ function NoteForm({handelAdd}) {
         e.preventDefault();
         if(text.trim().length>10){
             const newNote={text,rating}
-            handelAdd(newNote);
+            if(feedbackEdit.edit==true){
+               updateFeedback(feedbackEdit.item.id,newNote)
+            }
+            else{
+            addNewFeedback(newNote);
+            }
            setText('');
         }
         
@@ -43,11 +59,16 @@ function NoteForm({handelAdd}) {
     <Card>
     <form onSubmit={HandelSubmit}> 
        <div>
+       <h2>How would you rate your service with us?</h2>
+       
        <RatingSelect select={(rating)=>{setRating(rating)}}></RatingSelect>
+       <div  className='input-group'>
       <input onChange={HandelText} type="text" placeholder="add a review" name="" id="" value={text} />
       <Button type='submit'  version='secondary' isDisable={btnDisable}>send</Button>
-      {message && <div>{message}</div>}
+      {message && <div className='message'>{message}</div>}
     </div>
+    </div>
+
     
     </form>
  </Card>
