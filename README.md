@@ -6,7 +6,8 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 ## to run project server and client app
 npm run dev
 In the project directory, you can run:
-
+## `npm run dev`
+to start project run server and client app
 ### `npm start`
 
 Runs the app in the development mode.\
